@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriManage - Supplier Management</title>
+    <style>
+        /* Base Typography and Desktop-Only Enforcement */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #2c3e50;
+            min-width: 1024px;
+            overflow-x: auto;
+        }
+
+        /* Primary Structural Flexbox */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Persistent Navigation Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            background-color: #1a252f;
+            text-align: center;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #27ae60;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            padding: 18px 25px;
+            border-bottom: 1px solid #34495e;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.05rem;
+        }
+
+        .nav-item:hover {
+            background-color: #34495e;
+            padding-left: 30px;
+        }
+
+        .nav-item.active {
+            background-color: #27ae60;
+            border-left: 6px solid #2ecc71;
+        }
+
+        /* Primary Content Container */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Global Top Header */
+        .top-header {
+            height: 70px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            flex-shrink: 0;
+        }
+
+        .search-bar input {
+            padding: 10px 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            width: 350px;
+            font-size: 1rem;
+        }
+
+        .user-profile {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        /* Dynamic Module Rendering Area */
+        .content-area {
+            padding: 40px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 2rem;
+        }
+
+        .btn-add {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover {
+            background-color: #219653;
+        }
+
+        /* Split-View Sectioning */
+        .section-title {
+            font-size: 1.3rem;
+            color: #34495e;
+            margin-bottom: 15px;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Data Table Styling */
+        .data-table-container {
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .data-table th {
+            background-color: #34495e;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9fbfb;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #fcf3cf;
+            color: #f39c12;
+        }
+
+        .status-delivered {
+            background-color: #e8f8f5;
+            color: #27ae60;
+        }
+
+        /* Action Buttons */
+        .btn-secondary {
+            background-color: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">AgriManage</div>
+        <ul class="nav-menu">
+            <li class="nav-item">Dashboard Home</li>
+            <li class="nav-item">Field Operations</li>
+            <li class="nav-item">Product Catalog</li>
+            <li class="nav-item active">Supplier Management</li>
+            <li class="nav-item">Inventory & Storage</li>
+            <li class="nav-item">IoT Sensor Network</li>
+            <li class="nav-item">Quality Control</li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search suppliers, orders, or contacts...">
+            </div>
+            <div class="user-profile">System Administrator</div>
+        </header>
+
+        <main class="content-area">
+            <div class="module-header">
+                <h1 class="page-title">Supplier Management</h1>
+            </div>
+
+            <div class="section-title">
+                Active Suppliers
+                <button class="btn-add" style="padding: 6px 15px; font-size: 0.9rem;">+ Add Supplier</button>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Supplier ID</th>
+                            <th>Company Name</th>
+                            <th>Email Address</th>
+                            <th>Contact Number</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SUP-001</strong></td>
+                            <td>Apex AgriChemicals Ltd.</td>
+                            <td>orders@apexagri.com</td>
+                            <td>+880 1711-000001</td>
+                            <td><button class="btn-secondary">View Profile</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>SUP-002</strong></td>
+                            <td>Green Valley Seedlings</td>
+                            <td>supply@greenvalley.net</td>
+                            <td>+880 1812-000002</td>
+                            <td><button class="btn-secondary">View Profile</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-title">
+                Recent Purchase Orders
+                <button class="btn-add" style="padding: 6px 15px; font-size: 0.9rem;">+ Create P.O.</button>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Supplier Ref</th>
+                            <th>Order Type</th>
+                            <th>Order Date</th>
+                            <th>Target Delivery</th>
+                            <th>Status</th>
+                            <th>Line Items</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ORD-5092</strong></td>
+                            <td>SUP-001</td>
+                            <td>Bulk Fertilizer</td>
+                            <td>2026-03-25</td>
+                            <td>2026-04-02</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td><button class="btn-secondary">View 4 Items</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ORD-5091</strong></td>
+                            <td>SUP-002</td>
+                            <td>Organic Seeds</td>
+                            <td>2026-03-20</td>
+                            <td>2026-03-24</td>
+                            <td><span class="status-badge status-delivered">Delivered</span></td>
+                            <td><button class="btn-secondary">View 2 Items</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

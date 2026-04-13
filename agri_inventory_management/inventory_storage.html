@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriManage - Inventory & Storage</title>
+    <style>
+        /* Base Typography and Desktop-Only Enforcement */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #2c3e50;
+            min-width: 1024px;
+            overflow-x: auto;
+        }
+
+        /* Primary Structural Flexbox */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Persistent Navigation Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            background-color: #1a252f;
+            text-align: center;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #27ae60;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            padding: 18px 25px;
+            border-bottom: 1px solid #34495e;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.05rem;
+        }
+
+        .nav-item:hover {
+            background-color: #34495e;
+            padding-left: 30px;
+        }
+
+        .nav-item.active {
+            background-color: #27ae60;
+            border-left: 6px solid #2ecc71;
+        }
+
+        /* Primary Content Container */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Global Top Header */
+        .top-header {
+            height: 70px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            flex-shrink: 0;
+        }
+
+        .search-bar input {
+            padding: 10px 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            width: 350px;
+            font-size: 1rem;
+        }
+
+        .user-profile {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        /* Dynamic Module Rendering Area */
+        .content-area {
+            padding: 40px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 2rem;
+        }
+
+        /* Grid Architecture for Multiple Tables */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: #34495e;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+
+        /* Data Table Styling */
+        .data-table-container {
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background-color: #34495e;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9fbfb;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-optimal { background-color: #e8f8f5; color: #27ae60; }
+        .badge-warning { background-color: #fcf3cf; color: #f39c12; }
+        .badge-critical { background-color: #fdedec; color: #e74c3c; }
+        .badge-info { background-color: #eaf2f8; color: #2980b9; }
+
+        .btn-small {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-small:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">AgriManage</div>
+        <ul class="nav-menu">
+            <li class="nav-item">Dashboard Home</li>
+            <li class="nav-item">Field Operations</li>
+            <li class="nav-item">Product Catalog</li>
+            <li class="nav-item">Supplier Management</li>
+            <li class="nav-item active">Inventory & Storage</li>
+            <li class="nav-item">IoT Sensor Network</li>
+            <li class="nav-item">Quality Control</li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search facilities, stock IDs, or products...">
+            </div>
+            <div class="user-profile">System Administrator</div>
+        </header>
+
+        <main class="content-area">
+            <div class="module-header">
+                <h1 class="page-title">Inventory & Storage</h1>
+            </div>
+
+            <div class="dashboard-grid">
+                
+                <div>
+                    <div class="section-title">Storage Facilities <button class="btn-small">+ Add Facility</button></div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Storage ID</th>
+                                    <th>Facility Name</th>
+                                    <th>Type</th>
+                                    <th>Size & Capacity</th>
+                                    <th>Manager Ref</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>STR-A01</strong></td>
+                                    <td>Cold Storage Alpha</td>
+                                    <td><span class="badge badge-info">Refrigerated</span></td>
+                                    <td>Large (50,000 kg)</td>
+                                    <td>MGR-101</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>STR-B02</strong></td>
+                                    <td>Dry Silo Beta</td>
+                                    <td><span class="badge badge-warning">Ambient Dry</span></td>
+                                    <td>Medium (20,000 kg)</td>
+                                    <td>MGR-102</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-title">Facility Managers</div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Manager ID</th>
+                                    <th>Name</th>
+                                    <th>Contact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>MGR-101</strong></td>
+                                    <td>Tariq Rahman</td>
+                                    <td>+880 1722-112233</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MGR-102</strong></td>
+                                    <td>Salma Akter</td>
+                                    <td>+880 1833-445566</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="full-width">
+                    <div class="section-title">Current Inventory Stock <button class="btn-small" style="background-color: #27ae60;">+ Receive Shipment</button></div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Stock ID</th>
+                                    <th>Product Ref (ID)</th>
+                                    <th>Storage Ref (ID)</th>
+                                    <th>Current Quantity</th>
+                                    <th>Minimum Threshold Alert</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>STK-5001</strong></td>
+                                    <td>PRD-1001 (Avocados)</td>
+                                    <td>STR-A01</td>
+                                    <td>12,500 kg</td>
+                                    <td><span class="badge badge-optimal">Optimal Level</span></td>
+                                    <td><button class="btn-small" style="background-color: #bdc3c7; color: #2c3e50;">Adjust</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>STK-5002</strong></td>
+                                    <td>PRD-1002 (Potatoes)</td>
+                                    <td>STR-B02</td>
+                                    <td>18,000 t</td>
+                                    <td><span class="badge badge-optimal">Optimal Level</span></td>
+                                    <td><button class="btn-small" style="background-color: #bdc3c7; color: #2c3e50;">Adjust</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>STK-5003</strong></td>
+                                    <td>PRD-1003 (Raw Milk)</td>
+                                    <td>STR-A01</td>
+                                    <td>150 L</td>
+                                    <td><span class="badge badge-critical">Critical: Below Threshold</span></td>
+                                    <td><button class="btn-small" style="background-color: #bdc3c7; color: #2c3e50;">Adjust</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
